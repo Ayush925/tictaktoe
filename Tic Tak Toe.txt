@@ -1,0 +1,191 @@
+clear()
+setBackground(black)
+disablePanAndZoom()
+
+var t = false
+var b1, b2, b3, b4, b5, b6, b7, b8, b9 = 2
+var turn = true
+var filled = 0
+
+//Cross
+val X = penColor(white) -> Picture {
+    setPenThickness(10)
+    left(135)
+    hop(71)
+    right(180)
+    forward(142)
+    left(135)
+    hop(100)
+    left(135)
+    forward(142)
+}
+
+// Zero
+val O = penColor(yellow) -> Picture {
+    setPenThickness(10)
+    right(90)
+    hop(50)
+    left(90)
+    left(360, 50)
+}
+
+//Lines
+val line = Picture {
+    setPenThickness(10)
+    forward(450)
+}
+val line1 = trans(-75, -225) -> line.copy
+val line2 = trans(75, -225) -> line.copy
+val line3 = rot(90) * trans(-75, -225) -> line.copy
+val line4 = rot(90) * trans(75, -225) -> line.copy
+val lines = ArrayBuffer(line1, line2, line3, line4)
+
+// Blank Boxe
+val box = penColor(black) * fillColor(black) -> Picture.rect(138, 138)
+val box1 = trans(-219, 81) -> box.copy
+val box2 = trans(-69, 81) -> box.copy
+val box3 = trans(81, 81) -> box.copy
+val box4 = trans(-219, -69) -> box.copy
+val box5 = trans(-69, -69) -> box.copy
+val box6 = trans(81, -69) -> box.copy
+val box7 = trans(-219, -219) -> box.copy
+val box8 = trans(-69, -219) -> box.copy
+val box9 = trans(81, -219) -> box.copy
+val boxes = ArrayBuffer(box1, box2, box3, box4, box5, box6, box7, box8, box9)
+
+def erase() {
+    boxes.foreach { b =>
+        b.erase
+    }
+}
+
+def checkwin(q: Double, s: String) {
+    //
+    if ((b1 == q) && (b2 == q) && (b3 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if ((b4 == q) && (b5 == q) && (b6 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if ((b7 == q) && (b8 == q) && (b9 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    //
+    if ((b1 == q) && (b4 == q) && (b7 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if ((b2 == q) && (b5 == q) && (b8 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if ((b3 == q) && (b6 == q) && (b9 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    //
+    if ((b1 == q) && (b5 == q) && (b9 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if ((b3 == q) && (b5 == q) && (b7 == q)) {
+        drawCenteredMessage(s, green, 100)
+        t = true
+        erase()
+    }
+    if (t == false) {
+        if (filled == 9) {
+            drawCenteredMessage("Its Draw!", red, 100)
+            erase()
+        }
+    }
+}
+lines.foreach { z =>
+    z.draw
+}
+boxes.foreach { l =>
+    def checkturn() {
+        if (turn == false) {
+            draw(trans(l.position.x + 69, l.position.y + 69) -> O)
+            turn = true
+            if (l == box1) {
+                b1 = 0
+            }
+            if (l == box2) {
+                b2 = 0
+            }
+            if (l == box3) {
+                b3 = 0
+            }
+            if (l == box4) {
+                b4 = 0
+            }
+            if (l == box5) {
+                b5 = 0
+            }
+            if (l == box6) {
+                b6 = 0
+            }
+            if (l == box7) {
+                b7 = 0
+            }
+            if (l == box8) {
+                b8 = 0
+            }
+            if (l == box9) {
+                b9 = 0
+            }
+        }
+        else if (turn == true) {
+            draw(trans(l.position.x + 69, l.position.y + 69) -> X)
+            turn = false
+            if (l == box1) {
+                b1 = 1
+            }
+            if (l == box2) {
+                b2 = 1
+            }
+            if (l == box3) {
+                b3 = 1
+            }
+            if (l == box4) {
+                b4 = 1
+            }
+            if (l == box5) {
+                b5 = 1
+            }
+            if (l == box6) {
+                b6 = 1
+            }
+            if (l == box7) {
+                b7 = 1
+            }
+            if (l == box8) {
+                b8 = 1
+            }
+            if (l == box9) {
+                b9 = 1
+            }
+        }
+    }
+    l.draw
+    l.onMouseClick { (x, y) =>
+        filled = filled + 1
+        checkturn()
+        checkwin(1, "X win!")
+        checkwin(0, "O Win!")
+        l.onMouseRelease { (x, y) =>
+            l.erase()
+        }
+    }
+}
